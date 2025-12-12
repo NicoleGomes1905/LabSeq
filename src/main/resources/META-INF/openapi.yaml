@@ -1,0 +1,91 @@
+openapi: 3.0.3
+info:
+  title: labseq-service API
+  version: 1.0.0
+  description: |
+    Returns the value **L(n)** of the labseq sequence.
+
+    Recurrence:
+      - L(0) = 0
+      - L(1) = 1
+      - L(2) = 0
+      - L(3) = 1
+      - For n > 3: L(n) = L(n-4) + L(n-3)
+
+    Notes:
+      - The value may be very large (BigInteger); it is returned as a string.
+      - Intermediate results are memoized for performance (e.g., L(100000) < 10s on a typical laptop).
+servers:
+  - url: http://localhost:8080
+paths:
+  /labseq/{n}:
+    get:
+      tags: [labseq]
+      summary: Get L(n)
+      description: Returns the labseq value L(n) for a non-negative integer index **n**.
+      parameters:
+        - name: n
+          in: path
+          required: true
+          description: Non-negative index of the sequence.
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+          example: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabseqResponse'
+              examples:
+                l10:
+                  summary: Example for n=10
+                  value: { index: 10, value: "3" }
+        '400':
+          description: Invalid input (e.g., negative index).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example: { error: "Index must be a non-negative integer." }
+        '404':
+          description: Not Found (e.g., non-numeric path).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example: { error: "Resource not found." }
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example: { error: "Unexpected server error." }
+components:
+  schemas:
+    LabseqResponse:
+      type: object
+      required: [index, value]
+      properties:
+        index:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Requested index n.
+        value:
+          type: string
+          description: Labseq value L(n) (as BigInteger string).
+      example: { index: 15, value: "8" }
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      example: { error: "Index must be a non-negative integer." }
+tags:
+  - name: labseq
+    description: Labseq sequence endpoint

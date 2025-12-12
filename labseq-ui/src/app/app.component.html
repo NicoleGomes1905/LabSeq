@@ -1,0 +1,31 @@
+<div class="page">
+  <div class="card">
+    <h1>Labseq</h1>
+
+    <p class="subtitle">
+      Calculate <em>L(n)</em> (enter a non-negative index <em>n</em>).
+    </p>
+
+    <form class="row" (ngSubmit)="submit()">
+      <label for="n" class="sr-only">Index n</label>
+      <input
+        id="n"
+        type="number"
+        min="0"
+        max="650000"
+        name="n"
+        [(ngModel)]="n"
+        placeholder="Enter a number (ex.: 100000, max.: 650000)"
+      />
+      <button type="submit">Calculate</button>
+    </form>
+
+    <p class="error" *ngIf="error">
+      {{ error }}
+    </p>
+
+    <p class="result" *ngIf="result !== null">
+      l({{ n }}) = <strong>{{ result }}</strong>
+    </p>
+  </div>
+</div>

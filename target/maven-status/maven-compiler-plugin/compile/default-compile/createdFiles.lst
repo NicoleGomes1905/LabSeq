@@ -1,0 +1,4 @@
+com\nicole\labseq\api\LabseqResource$ErrorMessage.class
+com\nicole\labseq\api\LabseqResource.class
+com\nicole\labseq\domain\LabseqService.class
+com\nicole\labseq\api\dto\LabseqResponse.class
